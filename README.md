@@ -15,12 +15,12 @@
 אין תלויות ואין בנייה. מספיק שרת קבצים סטטי:
 
 ```bash
-cd hoshanot
+cd hoshanot   # תיקיית ה-repo
 python3 -m http.server 8000
 # ואז לפתוח http://localhost:8000
 ```
 
-פרסום: כל אחסון סטטי (GitHub Pages, Netlify, Render Static Site) — מעלים את התיקייה `hoshanot/` כמו שהיא.
+פרסום: כל אחסון סטטי (GitHub Pages, Netlify, Render Static Site) — ב-GitHub Pages: Settings → Pages → Deploy from branch → `main` / `(root)`.
 
 ## מקורות הטקסט
 | נוסח | מקור | רישיון |
@@ -32,5 +32,5 @@ python3 -m http.server 8000
 הקובץ `data.js` נוצר מהמקורות ע"י `tools/build_data.py` ונשמר ב-repo. לבנייה מחדש (דורש רשת):
 
 ```bash
-python3 hoshanot/tools/build_data.py
+python3 tools/build_data.py
 ```

@@ -6,7 +6,7 @@
   • ספרד       — סידור ספרד, מהדורת "תורת אמת" דרך Sefaria
   • עדות המזרח — ויקיטקסט, "הושענות/נוסח עדות המזרח" · CC BY-SA
 
-הרצה:  python3 hoshanot/tools/build_data.py
+הרצה:  python3 tools/build_data.py
 (דורש גישה לרשת; הקובץ data.js שנוצר נשמר ב-repo כך שהאפליקציה עובדת בלי בנייה.)
 """
 import html
