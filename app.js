@@ -16,7 +16,7 @@
 
   // ── מדידת שימוש (GoatCounter — בלי עוגיות ובלי מידע אישי) ──
   // שם החשבון ב-goatcounter.com (למשל 'hoshanot' עבור hoshanot.goatcounter.com). ריק = המדידה כבויה.
-  const GOATCOUNTER_CODE = '';
+  const GOATCOUNTER_CODE = 'danielohayon85';
 
   const analytics = (() => {
     const queue = [];

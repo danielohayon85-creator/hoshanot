@@ -38,7 +38,7 @@ python3 tools/build_data.py
 ## מדידת שימוש
 המדידה נעשית עם [GoatCounter](https://www.goatcounter.com): בלי עוגיות, בלי מידע אישי ובלי צורך בבאנר הסכמה. כדי להפעיל אותה:
 1. פותחים חשבון חינמי ב-goatcounter.com, למשל בשם `hoshanot`. הדשבורד יהיה בכתובת `hoshanot.goatcounter.com`.
-2. ב-`app.js` כותבים את שם החשבון: `const GOATCOUNTER_CODE = 'hoshanot';`
+2. ב-`app.js` מוגדר שם החשבון: `const GOATCOUNTER_CODE = 'danielohayon85';` (דשבורד: danielohayon85.goatcounter.com)
 
 מה נמדד:
 - כניסות ומבקרים ייחודיים (אוטומטי, כולל מכשיר ומדינה).
