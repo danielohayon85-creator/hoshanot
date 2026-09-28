@@ -164,6 +164,7 @@
         store.set('nusach', key);
         analytics.event('nusach-' + key, 'נוסח: ' + DATA.nusachim[key].name);
         refresh();
+        toast('נוסח ' + DATA.nusachim[key].name);
       });
       el.append(b);
     }
@@ -186,8 +187,6 @@
       });
       el.append(b);
     }
-    const sel = el.querySelector('[aria-selected="true"]');
-    if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
 
   // ── טקסט ──
@@ -281,7 +280,6 @@
 
   function applySpeed() {
     $('speedValue').textContent = state.speed;
-    $('speedRange').value = state.speed;
     $('slower').disabled = state.speed === SPEED_MIN;
     $('faster').disabled = state.speed === SPEED_MAX;
   }
@@ -298,7 +296,6 @@
   let pos = 0;
   let holding = false;       // המשתמש נוגע במסך / גולל ידנית
   let holdUntil = 0;
-  let dimTimer = 0;
 
   function readerStart() {
     return $('reader').getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.28;
@@ -313,9 +310,9 @@
     analytics.event('scroll-speed-' + state.speed, 'מהירות התחלתית: ' + state.speed);
     $('playBtn').setAttribute('aria-pressed', 'true');
     $('playBtn').setAttribute('aria-label', 'עצירת גלילה');
+    $('playCap').textContent = 'עצירה';
     $('guide').classList.toggle('hidden', !state.guide);
     requestWake();
-    scheduleDim();
 
     const start = readerStart();
     if (window.scrollY < start - 4) {
@@ -334,10 +331,9 @@
     cancelAnimationFrame(raf);
     $('playBtn').setAttribute('aria-pressed', 'false');
     $('playBtn').setAttribute('aria-label', 'התחלת גלילה');
+    $('playCap').textContent = 'גלילה';
     $('guide').classList.add('hidden');
     releaseWake();
-    clearTimeout(dimTimer);
-    $('dock').classList.remove('dim');
   }
 
   const toggle = () => (playing ? stop() : play());
@@ -372,10 +368,15 @@
     f.classList.add('show');
   }
 
-  function scheduleDim() {
-    clearTimeout(dimTimer);
-    $('dock').classList.remove('dim');
-    if (playing) dimTimer = setTimeout(() => playing && $('dock').classList.add('dim'), 3000);
+  let toastTimer = 0;
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('hidden');
+    void t.offsetWidth;
+    t.classList.remove('hidden');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.add('hidden'), 1700);
   }
 
   // ── מסך דלוק ──
@@ -429,13 +430,11 @@
     $('playBtn').addEventListener('click', toggle);
     $('slower').addEventListener('click', () => setSpeed(state.speed - 1));
     $('faster').addEventListener('click', () => setSpeed(state.speed + 1));
-    $('speedRange').addEventListener('input', (e) => setSpeed(e.target.value));
     $('fontDown').addEventListener('click', () => changeFont(-1));
     $('fontUp').addEventListener('click', () => changeFont(1));
     $('moreBtn').addEventListener('click', () => ($('sheet').classList.contains('hidden') ? openSheet() : closeSheet()));
     $('sheetBackdrop').addEventListener('click', closeSheet);
 
-    $('dock').addEventListener('pointerdown', scheduleDim);
 
     // לחיצה על הטקסט — עצירה/המשך (גרירה לגלילה אינה נחשבת לחיצה)
     $('reader').addEventListener('click', () => {

@@ -1,5 +1,5 @@
 // מטמון לעבודה ללא רשת (בית כנסת / סוכה בלי קליטה)
-const VERSION = 'hoshanot-v1';
+const VERSION = 'hoshanot-v2';
 const CORE = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'icon.svg', 'manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {

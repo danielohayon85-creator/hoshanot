@@ -40,30 +40,34 @@
   <div class="tap-flash" id="tapFlash" aria-hidden="true"></div>
 
   <nav class="dock" id="dock" aria-label="שליטה בגלילה">
-    <div class="dock-group">
-      <button class="icon-btn" id="fontDown" aria-label="הקטנת גופן"><span class="a-small">א</span></button>
-      <button class="icon-btn" id="fontUp" aria-label="הגדלת גופן"><span class="a-big">א</span></button>
-    </div>
-
-    <div class="speed">
-      <button class="icon-btn" id="slower" aria-label="האטה">−</button>
-      <label class="speed-label" for="speedRange">
-        <span class="speed-caption">מהירות</span>
-        <output id="speedValue">5</output>
-      </label>
-      <button class="icon-btn" id="faster" aria-label="האצה">+</button>
-      <input type="range" id="speedRange" min="1" max="15" step="1" value="5" aria-label="מהירות גלילה">
+    <div class="ctl" role="group" aria-labelledby="speedCap">
+      <div class="ctl-row">
+        <button class="step" id="faster" aria-label="מהר יותר"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+        <output id="speedValue" aria-live="polite">5</output>
+        <button class="step" id="slower" aria-label="לאט יותר"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      </div>
+      <span class="ctl-cap" id="speedCap">מהירות</span>
     </div>
 
     <button class="play" id="playBtn" aria-label="התחלת גלילה" aria-pressed="false">
       <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
       <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      <span class="play-cap" id="playCap">גלילה</span>
     </button>
 
-    <button class="icon-btn" id="moreBtn" aria-label="אפשרויות נוספות" aria-expanded="false" aria-controls="sheet">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+    <div class="ctl" role="group" aria-labelledby="fontCap">
+      <div class="ctl-row">
+        <button class="step" id="fontUp" aria-label="הגדלת הטקסט"><span class="glyph big">א</span></button>
+        <button class="step" id="fontDown" aria-label="הקטנת הטקסט"><span class="glyph small">א</span></button>
+      </div>
+      <span class="ctl-cap" id="fontCap">גודל טקסט</span>
+    </div>
+
+    <button class="more" id="moreBtn" aria-label="אפשרויות נוספות" aria-expanded="false" aria-controls="sheet">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
     </button>
   </nav>
+  <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
   <div class="sheet-backdrop hidden" id="sheetBackdrop"></div>
   <section class="sheet hidden" id="sheet" aria-label="אפשרויות">
