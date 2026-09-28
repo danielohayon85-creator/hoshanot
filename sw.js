@@ -1,5 +1,5 @@
 // מטמון לעבודה ללא רשת (בית כנסת / סוכה בלי קליטה)
-const VERSION = 'hoshanot-v3';
+const VERSION = 'hoshanot-v4';
 const CORE = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'icon.svg', 'manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
@@ -33,8 +33,9 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
+  // cache: 'no-cache' — תמיד בודקים מול השרת שיש גרסה חדשה (מדלג על מטמון הדפדפן של 10 דקות)
   e.respondWith(
-    fetch(req)
+    fetch(req, { cache: 'no-cache' })
       .then((res) => {
         if (res.ok) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); }
         return res;
