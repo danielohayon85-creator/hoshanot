@@ -374,9 +374,87 @@ def build_edot():
     }
 
 
+# ───────────── חב"ד — סידור תורה אור (מתוך חב"דפדיה) ─────────────
+CHABAD_TITLES = ['לְמַעַן אֲמִתָּךְ', 'אֶבֶן שְׁתִיָּה', 'אוֹם אֲנִי חוֹמָה', 'אָדוֹן הַמּוֹשִׁיעַ', 'אָדָם וּבְהֵמָה', 'אֲדָמָה מֵאָרֶר']
+DAY_PREFIX = re.compile(r"^יום [א-ו]'\s*")
+KAHO = re.compile(r"\s*\.?\s*אני והו כהו'\.?\s*$")
+
+
+def build_chabad():
+    """הסדר בחב"ד קבוע לפי יום בחג (לא לפי היום בשבוע), ובשבת אין אומרים הושענות כלל."""
+    src = (Path(__file__).resolve().parent / 'chabad_source.txt').read_text(encoding='utf-8')
+    paras = [p.strip() for p in re.split(r'\n\s*\n', src) if p.strip()]
+
+    def idx(start, after=0):
+        for i in range(after, len(paras)):
+            if plain(paras[i]).startswith(start):
+                return i
+        raise SystemExit(f'chabad: paragraph not found: {start}')
+
+    o = idx('הושענא')
+    first, *rest = paras[o].split('\n')
+    opening = [['r', clean(first)]] + [['p', clean(r)] for r in rest]
+
+    days = []
+    at = o + 1
+    for n in range(6):
+        i = idx("יום " + "אבגדהו"[n] + "'", at)
+        piyut = para(DAY_PREFIX.sub('', paras[i]))
+        verse = KAHO.sub('', paras[i + 1]).rstrip('.') + ':' if 'אני והו' in paras[i + 1] else paras[i + 1]
+        days.append(piyut + [['p', clean(verse)]])
+        at = i + 2
+
+    ani = idx('אני והו', at)
+    ani_vaho = [['r', 'אֲנִי וָהוּ הוֹשִׁיעָה נָּא:']]
+    kehoshata = para(paras[ani + 1])
+    hoshia = para(paras[ani + 2])
+    closing = ani_vaho + kehoshata + hoshia
+
+    daily_note = [['n', 'אחר ההלל. מקיפים את הבימה פעם אחת עם הלולב, ואומרים:']]
+    services = {}
+    for n in range(6):
+        services[f'd{n + 1}'] = {'title': CHABAD_TITLES[n], 'blocks': daily_note + opening + days[n] + closing}
+    services['shabbat'] = {'title': 'אין אומרים הושענות', 'blocks': [
+        ['n', 'במנהג חב"ד אין אומרים הושענות בשבת כלל.'],
+        ['n', 'ההושענה של יום זה אינה נאמרת, ולמחרת ממשיכים לפי מספר היום בחג.'],
+    ]}
+
+    # הושענא רבה: שש ההושענות עם הפסוקים (הקפה לכל אחת), למען איתן (הקפה שביעית), ואחר כך ההמשך
+    hr_at = idx('להושענא רבה', ani + 3)
+    eitan = idx('למען איתן', hr_at)
+    hr = [['n', 'מקיפים את הבימה שבע פעמים: שש ההושענות של ימי הסוכות, ואחריהן "למען איתן".']] + opening
+    for n in range(6):
+        hr += [['h', HAKAFA[n]]] + days[n]
+    hr += [['h', HAKAFA[6]]] + para(paras[eitan]) + para(paras[eitan + 1])
+    hr += ani_vaho + kehoshata
+    cont = idx('אני והו', eitan + 2)
+    for ptxt in paras[cont:]:
+        t = plain(ptxt)
+        if t.startswith('ואחר כך נוטל'):
+            note, text = ptxt.split('\n', 1)
+            hr += [['h', 'חביטת הערבה'], ['n', clean(note)], ['p', clean(text)]]
+        elif t.startswith('גפ') or t.startswith('ג"פ'):
+            hr.append(['r', clean(re.sub(r'^ג"פ\s*', '', ptxt))])
+            hr.append(['n', 'שלוש פעמים'])
+        elif t.startswith('אני והו'):
+            hr += ani_vaho
+        elif t.startswith('הושיעה את'):
+            hr += para(re.sub(r'\s*ק"ש\s*$', '', ptxt))
+            hr.append(['n', 'קדיש שלם'])
+        else:
+            hr += para(ptxt)
+    services['hr'] = {'title': TITLES['hr'], 'blocks': hr}
+
+    return {
+        'name': 'חב"ד',
+        'source': 'סידור תורה אור (נוסח אדמו"ר הזקן), מתוך חב"דפדיה',
+        'services': services,
+    }
+
+
 def main():
     data = {'nusachim': {}}
-    for key, fn in [('ashkenaz', build_ashkenaz), ('sefard', build_sefard), ('edot', build_edot)]:
+    for key, fn in [('ashkenaz', build_ashkenaz), ('sefard', build_sefard), ('edot', build_edot), ('chabad', build_chabad)]:
         print(f'building {key}…', file=sys.stderr)
         data['nusachim'][key] = fn()
         for sk, sv in data['nusachim'][key]['services'].items():

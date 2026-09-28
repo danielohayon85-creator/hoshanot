@@ -42,7 +42,7 @@
     };
   })();
 
-  const NUSACHIM = ['ashkenaz', 'sefard', 'edot'];
+  const NUSACHIM = ['ashkenaz', 'sefard', 'edot', 'chabad'];
   const FONT_SIZES = [20, 22, 24, 26, 28, 31, 34, 38, 42, 47, 52];
   const SPEED_MIN = 1, SPEED_MAX = 15;
 
@@ -115,7 +115,8 @@
   function serviceKey(n) {
     if (n === 7) return 'hr';
     const w = weekdayOf(n);
-    if (state.nusach === 'edot') return w === 6 ? 'shabbat' : 'd' + n;
+    // עדות המזרח וחב"ד: לפי מספר היום בחג. בחב"ד בשבת אין הושענות כלל (מוצגת הודעה).
+    if (state.nusach === 'edot' || state.nusach === 'chabad') return w === 6 ? 'shabbat' : 'd' + n;
     return ORDER[sukkot.day1.getDay()][n - 1];
   }
 

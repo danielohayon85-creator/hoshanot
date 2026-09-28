@@ -113,6 +113,9 @@ button { font: inherit; color: inherit; }
 }
 .segmented button[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); }
 .segmented button:active { transform: scale(.96); }
+@media (max-width: 420px) {
+  #nusachPicker button { padding: 0 12px; font-size: 15px; }
+}
 .segmented.small button { min-height: 36px; padding: 0 12px; font-size: 14px; }
 
 .days {
