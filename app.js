@@ -14,6 +14,34 @@
     },
   };
 
+  // ── מדידת שימוש (GoatCounter — בלי עוגיות ובלי מידע אישי) ──
+  // שם החשבון ב-goatcounter.com (למשל 'hoshanot' עבור hoshanot.goatcounter.com). ריק = המדידה כבויה.
+  const GOATCOUNTER_CODE = '';
+
+  const analytics = (() => {
+    const queue = [];
+    const sent = new Set();
+    const ready = () => window.goatcounter && typeof window.goatcounter.count === 'function';
+    function flush() { while (ready() && queue.length) window.goatcounter.count(queue.shift()); }
+    if (GOATCOUNTER_CODE && location.protocol.startsWith('http')) {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://gc.zgo.at/count.js';
+      s.dataset.goatcounter = `https://${GOATCOUNTER_CODE}.goatcounter.com/count`;
+      s.onload = flush;
+      document.head.append(s);
+    }
+    return {
+      // אירוע נספר פעם אחת בכל טעינת דף, כדי שהמספרים ישקפו "כמה אנשים" ולא "כמה לחיצות"
+      event(path, title) {
+        if (!GOATCOUNTER_CODE || sent.has(path)) return;
+        sent.add(path);
+        queue.push({ path, title: title || path, event: true });
+        flush();
+      },
+    };
+  })();
+
   const NUSACHIM = ['ashkenaz', 'sefard', 'edot'];
   const FONT_SIZES = [20, 22, 24, 26, 28, 31, 34, 38, 42, 47, 52];
   const SPEED_MIN = 1, SPEED_MAX = 15;
@@ -134,6 +162,7 @@
         if (state.nusach === key) return;
         state.nusach = key;
         store.set('nusach', key);
+        analytics.event('nusach-' + key, 'נוסח: ' + DATA.nusachim[key].name);
         refresh();
       });
       el.append(b);
@@ -280,6 +309,8 @@
     const max = document.documentElement.scrollHeight - window.innerHeight;
     if (window.scrollY >= max - 2) window.scrollTo(0, readerStart());
     playing = true;
+    analytics.event('scroll-play', 'הפעלת גלילה');
+    analytics.event('scroll-speed-' + state.speed, 'מהירות התחלתית: ' + state.speed);
     $('playBtn').setAttribute('aria-pressed', 'true');
     $('playBtn').setAttribute('aria-label', 'עצירת גלילה');
     $('guide').classList.toggle('hidden', !state.guide);
@@ -481,6 +512,11 @@
   applySpeed();
   bind();
   refresh();
+
+  analytics.event('nusach-' + state.nusach, 'נוסח: ' + DATA.nusachim[state.nusach].name);
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  if (standalone) analytics.event('open-installed', 'פתיחה מאפליקציה מותקנת');
+  window.addEventListener('appinstalled', () => analytics.event('installed', 'התקנה במסך הבית'));
 
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

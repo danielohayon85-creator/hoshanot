@@ -34,3 +34,16 @@ python3 -m http.server 8000
 ```bash
 python3 tools/build_data.py
 ```
+
+## מדידת שימוש
+המדידה נעשית עם [GoatCounter](https://www.goatcounter.com): בלי עוגיות, בלי מידע אישי ובלי צורך בבאנר הסכמה. כדי להפעיל אותה:
+1. פותחים חשבון חינמי ב-goatcounter.com, למשל בשם `hoshanot`. הדשבורד יהיה בכתובת `hoshanot.goatcounter.com`.
+2. ב-`app.js` כותבים את שם החשבון: `const GOATCOUNTER_CODE = 'hoshanot';`
+
+מה נמדד:
+- כניסות ומבקרים ייחודיים (אוטומטי, כולל מכשיר ומדינה).
+- `nusach-ashkenaz` / `nusach-sefard` / `nusach-edot`: איזה נוסח היה בשימוש.
+- `scroll-play`: הפעלת גלילה. `scroll-speed-N`: המהירות שבה התחילו.
+- `open-installed`: פתיחה מאפליקציה מותקנת. `installed`: התקנה במסך הבית (אנדרואיד/כרום).
+
+כל אירוע נספר פעם אחת לכל כניסה, כך שהמספרים משקפים אנשים ולא לחיצות. כניסות בלי רשת לא נספרות.
