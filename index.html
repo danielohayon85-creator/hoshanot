@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>הושענות</title>
+  <meta name="description" content="ההושענות של היום, לפי נוסח, עם גלילה איטית אוטומטית">
+  <meta name="theme-color" content="#F7F3EA" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14130F" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="הושענות">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+
+  <header class="hero" id="hero">
+    <div class="brand">
+      <img src="icon.svg" alt="" width="28" height="28">
+      <span>הושענות</span>
+    </div>
+    <p class="today" id="todayLine"></p>
+    <h1 class="piyut-title" id="piyutTitle"></h1>
+    <p class="heb-date" id="hebDate"></p>
+
+    <div class="segmented" role="radiogroup" aria-label="נוסח" id="nusachPicker"></div>
+    <div class="days" role="tablist" aria-label="יום בסוכות" id="dayPicker"></div>
+    <p class="notice hidden" id="notice"></p>
+  </header>
+
+  <main class="reader" id="reader" aria-live="off"></main>
+
+  <div class="guide hidden" id="guide" aria-hidden="true"></div>
+  <div class="tap-flash" id="tapFlash" aria-hidden="true"></div>
+
+  <nav class="dock" id="dock" aria-label="שליטה בגלילה">
+    <div class="dock-group">
+      <button class="icon-btn" id="fontDown" aria-label="הקטנת גופן"><span class="a-small">א</span></button>
+      <button class="icon-btn" id="fontUp" aria-label="הגדלת גופן"><span class="a-big">א</span></button>
+    </div>
+
+    <div class="speed">
+      <button class="icon-btn" id="slower" aria-label="האטה">−</button>
+      <label class="speed-label" for="speedRange">
+        <span class="speed-caption">מהירות</span>
+        <output id="speedValue">5</output>
+      </label>
+      <button class="icon-btn" id="faster" aria-label="האצה">+</button>
+      <input type="range" id="speedRange" min="1" max="15" step="1" value="5" aria-label="מהירות גלילה">
+    </div>
+
+    <button class="play" id="playBtn" aria-label="התחלת גלילה" aria-pressed="false">
+      <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+      <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+    </button>
+
+    <button class="icon-btn" id="moreBtn" aria-label="אפשרויות נוספות" aria-expanded="false" aria-controls="sheet">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+    </button>
+  </nav>
+
+  <div class="sheet-backdrop hidden" id="sheetBackdrop"></div>
+  <section class="sheet hidden" id="sheet" aria-label="אפשרויות">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <label class="row">
+      <span>קו מיקוד בזמן גלילה</span>
+      <input type="checkbox" id="guideToggle" class="switch">
+    </label>
+    <label class="row">
+      <span>השארת המסך דלוק</span>
+      <input type="checkbox" id="wakeToggle" class="switch">
+    </label>
+    <div class="row">
+      <span>ערכת צבע</span>
+      <div class="segmented small" role="radiogroup" aria-label="ערכת צבע" id="themePicker">
+        <button role="radio" data-theme="auto">אוטומטי</button>
+        <button role="radio" data-theme="light">בהיר</button>
+        <button role="radio" data-theme="dark">כהה</button>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn" id="fullscreenBtn">מסך מלא</button>
+      <button class="btn" id="topBtn">חזרה להתחלה</button>
+    </div>
+    <div class="sections hidden" id="sections">
+      <p class="sections-title">מעבר מהיר</p>
+      <div class="sections-list" id="sectionsList"></div>
+    </div>
+    <p class="shortcuts">מקלדת: רווח — עצירה/המשך · חצים ↑↓ — מהירות · לחיצה על הטקסט — עצירה/המשך</p>
+  </section>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
