@@ -225,7 +225,8 @@
     }
     const end = document.createElement('div');
     end.className = 'end';
-    end.innerHTML = `<strong>סוף ההושענות</strong>נוסח ${DATA.nusachim[state.nusach].name} · מקור: ${DATA.nusachim[state.nusach].source}`;
+    end.innerHTML = `<strong>סוף ההושענות</strong>נוסח ${DATA.nusachim[state.nusach].name} · מקור: ${DATA.nusachim[state.nusach].source}` +
+      '<p class="credit">פותח על ידי דניאל אוחיון לזיכוי הרבים</p>';
     frag.append(end);
     reader.replaceChildren(frag);
     renderSections();

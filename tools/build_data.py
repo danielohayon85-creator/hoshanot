@@ -65,6 +65,8 @@ def clean(s):
     s = TAAMIM.sub('', s)
     s = s.replace(' ', ' ')
     s = re.sub(r'[ \t ]+', ' ', s)
+    s = re.sub(r'\s*•\s*', ' ', s)  # מפרידי חצאי-חרוז בויקיטקסט — לא חלק מהנוסח
+    s = re.sub(r'[ \t]+([:.,׃])', r'\1', s)  # רווח שנשאר לפני סימן פיסוק
     s = re.sub(r'\s*<br\s*/?>\s*', '<br>', s)
     return s.strip()
 
